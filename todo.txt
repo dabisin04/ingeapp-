@@ -1,0 +1,89 @@
+(PRIMORDIAL)AÑADIR ANALIZADOR Y SOLUCIONADOR PARA LOS SIGUIENTES CASOS <- COMPLETADO
+//Sustituir una obligación de tres pagarés así: uno de U$45.000 en tres meses, otro de 
+U$30.000 en ocho meses y otro de U$35.000 en quince meses y con una tasa de interés del 
+2,5% mensual, por su equivalente en tres pagos a dos, seis y once meses, tales que cada uno
+sea la quinta parte del anterior, si para este caso la tasa de interés será del 2,1% mensual.
+𝑿/(𝟏 + 𝟎, 𝟎𝟐𝟏)^𝟐 + (𝑿/𝟓)/(𝟏 + 𝟎, 𝟎𝟐𝟏)^𝟔 + (𝑿/𝟐𝟓)/(𝟏 + 𝟎, 𝟎𝟐𝟏)^𝟏𝟏 = 𝟒𝟓.𝟎𝟎𝟎/(𝟏+ 𝟎, 𝟎𝟐𝟓)^𝟑 + 𝟑𝟎. 𝟎𝟎𝟎/(𝟏 + 𝟎, 𝟎𝟐𝟓)/𝟖 + 𝟑𝟓. 𝟎𝟎𝟎/(𝟏 + 𝟎, 𝟎𝟐𝟓)^𝟏𝟓
+ 
+𝑿[ 𝟏/(𝟏 + 𝟎,𝟎𝟐𝟏)^𝟐 + 𝟏/(𝟓(𝟏 + 𝟎, 𝟎𝟐𝟏)^𝟔) + 𝟏/(𝟐𝟓(𝟏 + 𝟎, 𝟎𝟐𝟏)^𝟏𝟏)] = 𝟒𝟓.𝟎𝟎𝟎/(𝟏 + 𝟎,𝟎𝟐𝟓)^𝟑 + 𝟑𝟎. 𝟎𝟎𝟎/(𝟏 + 𝟎, 𝟎𝟐𝟓)^𝟖 + 𝟑𝟓.𝟎𝟎𝟎/(𝟏 + 𝟎, 𝟎𝟐𝟓)^𝟏𝟓 
+
+𝑿(𝟏,𝟏𝟕) = 𝟗𝟎.𝟓𝟕𝟓,𝟔𝟕 
+
+𝑿 =  𝟗𝟎.𝟓𝟕𝟓,𝟔𝟕/𝟏,𝟏𝟕 
+
+𝑿 = 𝟕𝟕.𝟓𝟔𝟗,𝟖𝟔  
+
+Primer pago: U$77.569,86
+Segundo pago: U$15.513,97 =  77.569,86/5
+Tercer pago: U$3.102,79 = 77.569,86/25 
+----
+
+Financiar U$35.000 a 24 meses con pagos iguales en los meses 6, 10 y 20, 
+y un último pago al cabo de dos años igual a la mitad de la deuda original, 
+sabiendo que la tasa de interés de la financiación es del 2% mensual el primer año y del 2,5% mensual de ahí en adelante.
+
+𝟑𝟓.𝟎𝟎𝟎 = 𝑿/(𝟏 + 𝟎,𝟎𝟐)^𝟔 + 𝑿/(𝟏 + 𝟎,𝟎𝟐)^𝟏𝟎 + 𝑿/((𝟏 + 𝟎,𝟎𝟐𝟓)^𝟖*(𝟏 + 𝟎,𝟎𝟐)^𝟏𝟐)+𝟏𝟕.𝟓𝟎𝟎/((𝟏 + 𝟎,𝟎𝟐𝟓)^𝟏𝟐(𝟏 + 𝟎,𝟎𝟐)^𝟏𝟐)
+
+𝟑𝟓.𝟎𝟎𝟎 = 𝑿[𝟏/(𝟏 + 𝟎,𝟎𝟐)^𝟔 + 𝟏/(𝟏 + 𝟎,𝟎𝟐)^𝟏𝟎 + 𝟏/((𝟏 +𝟎,𝟎𝟐𝟓)^𝟖(𝟏 + 𝟎,𝟎𝟐)^𝟏𝟐)]+ 𝟏𝟎.𝟐𝟔𝟎, 𝟎𝟑 
+
+𝟑𝟓.𝟎𝟎𝟎 − 𝟏𝟎. 𝟐𝟔𝟎, 𝟎𝟑 = 𝑿[𝟐,𝟑𝟓𝟓𝟓] 
+
+(𝟑𝟓.𝟎𝟎𝟎 − 𝟏𝟎.𝟐𝟔𝟎, 𝟎𝟑)/𝟐, 𝟑𝟓𝟓𝟓 = 𝑿 
+
+𝑿 = 𝟏𝟎. 𝟓𝟎𝟑, 𝟏8
+
+-----
+Determinar el valor de precio al contado de un artículo que financiado se adquiere así: 
+cuota  inicial del 20% del valor de precio al contado, tres pagos de $75.000, $85.000 y $105.000, a 5, 12 y 15 meses respectivamente, 
+y un último pago dentro de veinte meses del 30% del valor de precio al contado del artículo. La tasa de interés será del 2,3% mensual 
+durante los ocho primeros meses y del 2,6% mensual de ahí en adelante. 
+
+𝑿 = 𝟎,𝟐𝑿+ 𝟕𝟓.𝟎𝟎𝟎/(𝟏 + 𝟎,𝟎𝟐𝟑)^𝟓 + 𝟖𝟓.𝟎𝟎𝟎/((𝟏 + 𝟎,𝟎𝟐𝟔)^𝟒*(𝟏 + 𝟎,𝟎𝟐𝟑)^𝟖) + 𝟏𝟎𝟓.𝟎𝟎𝟎/((𝟏 +𝟎,𝟎𝟐𝟔)^𝟕*(𝟏 +𝟎,𝟎𝟐𝟑)^𝟖) + 𝟎,𝟑𝑿/((𝟏 + 𝟎,𝟎𝟐𝟔)^𝟏𝟐*(𝟏 + 𝟎,𝟎𝟐𝟑)^𝟖) 
+
+𝑿− 𝟎,𝟐𝑿− 𝟎,𝟑𝑿/((𝟏 +𝟎,𝟎𝟐𝟔)^𝟏𝟐(𝟏 +𝟎, 𝟎𝟐𝟑)^𝟖) = 𝟕𝟓.𝟎𝟎𝟎 (𝟏 + 𝟎,𝟎𝟐𝟑)^𝟓 + 𝟖𝟓.𝟎𝟎𝟎/((𝟏 + 𝟎,𝟎𝟐𝟔)^𝟒*(𝟏 + 𝟎,𝟎𝟐𝟑)^𝟖) + 𝟏𝟎𝟓.𝟎𝟎𝟎/((𝟏 + 𝟎,𝟎𝟐𝟔)^𝟕(𝟏 + 𝟎,𝟎𝟐𝟑)^𝟖)
+
+𝑿− 𝟎,𝟐𝟎𝟎𝑿 − 𝟎,𝟏𝟖𝟑𝟖𝑿 = 𝟔𝟔.𝟗𝟑𝟗,𝟔𝟎+ 𝟔𝟑.𝟗𝟒𝟕,𝟔𝟐 +𝟕𝟑.𝟏𝟑𝟗,𝟔𝟐 
+
+𝟎,𝟔𝟏𝟔𝟐𝑿 = 𝟐𝟎𝟒.𝟎𝟐𝟔,𝟖𝟒 
+
+𝑿 = 𝟐𝟎𝟒.𝟎𝟐𝟔,𝟖𝟒/𝟎,𝟔𝟏𝟔𝟐 
+
+𝑿 = 𝟑𝟑𝟏.𝟏𝟎𝟓,𝟒𝟒
+-------
+
+Una persona hace hoy un depósito de U$40.000 en una cuenta de ahorros que paga el 6,2%  trimestral. 
+Dos años más tarde deposita U$120.000; un año después de este depósito hace otro por valor de U$18.000; 
+tres años más tarde de este último depósito, la tercera parte del total acumulado se transfiere a otra cuenta que paga un interés del 7,5% trimestral. 
+¿Cuánto dinero se tendrá en cada una de las cuentas cuatro años después de la transferencia? 
+
+
+𝑨𝒄𝒖𝒎𝒖𝒍𝒂𝒅𝒐 = 𝟒𝟎.𝟎𝟎𝟎(𝟏 + 𝟎,𝟎𝟔𝟐)^𝟐𝟒 + 𝟏𝟐𝟎.𝟎𝟎𝟎(𝟏 + 𝟎,𝟎𝟔𝟐)^𝟏𝟔 + 𝟏𝟖.𝟎𝟎𝟎(𝟏 + 𝟎,𝟎𝟔𝟐)^𝟏𝟐 
+
+𝑨𝒄𝒖𝒎𝒖𝒍𝒂𝒅𝒐 = 𝟏𝟔𝟗.𝟒𝟓𝟐,𝟔𝟔 + 𝟑𝟏𝟒.𝟏𝟕𝟔,𝟑𝟕 + 𝟑𝟕.𝟎𝟒𝟖,𝟏𝟕 
+
+𝑨𝒄𝒖𝒎𝒖𝒍𝒂𝒅𝒐 = 𝟓𝟐𝟎.𝟔𝟕𝟕,𝟏𝟗
+
+
+𝑪𝟏 = 𝟑𝟒𝟕.𝟏𝟏𝟖,𝟏𝟑(𝟏 + 𝟎,𝟎𝟔𝟐)^𝟏𝟔
+
+
+𝑪𝟐 = 𝟏𝟕𝟑.𝟓𝟓𝟗,𝟎𝟔(𝟏 + 𝟎,𝟎𝟕𝟓)^𝟏𝟔
+
+
+𝑪𝟏 = 𝟗𝟎𝟖. 𝟖𝟎𝟐,𝟔𝟏
+
+
+𝑪𝟐 = 𝟓𝟓𝟐. 𝟎𝟓𝟓,𝟒𝟖 //
+--------
+
+(MEDIO)AÑADIR HISTORIAL
+
+(SECUNDARIO)AÑADIR CONFIGURACION PARA CAMBIAR REPRESENTACION DE MOVIMIENTOS
+
+SI YO LE DOY CLICK A UNA VAINA EN EL HISTORIAL LA MUESTRE EN LA UI
+
+PASAR PERIODO A DOUBLE
+
+(PRIMORDIAL SECUNDARIO)INVERTIR EGRESOS E INGRESOS Y REVISAR SI AFECTA DE MANERA FUNCIONAL
+
+PASAR CANTIDAD DE PERIODOS 
