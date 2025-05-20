@@ -13,11 +13,17 @@ class ValueCardDialog extends StatefulWidget {
   _ValueCardDialogState createState() => _ValueCardDialogState();
 }
 
-class _ValueCardDialogState extends State<ValueCardDialog> {
+class _ValueCardDialogState extends State<ValueCardDialog>
+    with SingleTickerProviderStateMixin {
   late TextEditingController _periodoCtrl;
   late TextEditingController _valorCtrl;
+  late TextEditingController _hastaPeriodoCtrl;
   String? _tipo;
-  String _flujo = 'Ingreso';
+  String _flujo = 'ingreso';
+  bool _esSerie = false;
+  String _tipoSerie = 'vencida';
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -25,33 +31,55 @@ class _ValueCardDialogState extends State<ValueCardDialog> {
     _periodoCtrl = TextEditingController(
       text: widget.valor?.periodo?.toString() ?? '',
     );
+    _hastaPeriodoCtrl = TextEditingController(
+      text: widget.valor?.hastaPeriodo?.toString() ?? '',
+    );
+    _valorCtrl = TextEditingController();
 
-    // 🔥 Corregimos aquí:
-    final val = widget.valor?.valor;
-    if (val == null) {
-      _valorCtrl = TextEditingController(text: '');
-    } else if (val is double) {
-      _valorCtrl = TextEditingController(text: val.toStringAsFixed(2));
-    } else if (val is String) {
-      _valorCtrl = TextEditingController(text: val);
+    if (widget.valor != null) {
+      final val = widget.valor!.valor;
+      if (val != null) {
+        if (val is double) {
+          _valorCtrl.text = val.toStringAsFixed(2);
+        } else if (val is String) {
+          _valorCtrl.text = val;
+        }
+      }
+
+      _tipo = widget.valor!.tipo;
+      _flujo = widget.valor!.flujo.toLowerCase();
+      _esSerie = widget.valor!.esSerie ?? false;
+      _tipoSerie = widget.valor!.tipoSerie ?? 'vencida';
     }
 
-    _tipo = widget.valor?.tipo;
-    _flujo = widget.valor?.flujo ?? 'Ingreso';
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+    if (_esSerie) _animationController.forward();
   }
 
   @override
   void dispose() {
     _periodoCtrl.dispose();
     _valorCtrl.dispose();
+    _hastaPeriodoCtrl.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   void _onSave() {
     final periodoText = _periodoCtrl.text.trim();
     final valorText = _valorCtrl.text.trim();
+    final hastaPeriodoText = _hastaPeriodoCtrl.text.trim();
 
     final int? periodo = periodoText.isEmpty ? null : int.tryParse(periodoText);
+    final int? hastaPeriodo =
+        hastaPeriodoText.isEmpty ? null : int.tryParse(hastaPeriodoText);
 
     dynamic valorFinal;
     if (valorText.isEmpty) {
@@ -59,7 +87,7 @@ class _ValueCardDialogState extends State<ValueCardDialog> {
     } else if (double.tryParse(valorText) != null) {
       valorFinal = double.parse(valorText);
     } else {
-      valorFinal = valorText; // Guarda como String directamente
+      valorFinal = valorText;
     }
 
     if (_tipo == null) return;
@@ -69,6 +97,9 @@ class _ValueCardDialogState extends State<ValueCardDialog> {
       periodo: periodo,
       tipo: _tipo!,
       flujo: _flujo,
+      esSerie: _esSerie,
+      tipoSerie: _esSerie ? _tipoSerie : null,
+      hastaPeriodo: _esSerie ? hastaPeriodo : null,
     );
 
     final bloc = context.read<ValorBloc>();
@@ -154,10 +185,52 @@ class _ValueCardDialogState extends State<ValueCardDialog> {
             DropdownButtonFormField<String>(
               value: _flujo,
               decoration: const InputDecoration(labelText: 'Flujo'),
-              items: ['Ingreso', 'Egreso']
-                  .map((f) => DropdownMenuItem(value: f, child: Text(f)))
-                  .toList(),
+              items: const [
+                DropdownMenuItem(value: 'ingreso', child: Text('Ingreso')),
+                DropdownMenuItem(value: 'egreso', child: Text('Egreso')),
+              ],
               onChanged: (v) => setState(() => _flujo = v!),
+            ),
+            const SizedBox(height: 12),
+            SwitchListTile(
+              title: const Text('Es una serie de pagos'),
+              value: _esSerie,
+              onChanged: (value) {
+                setState(() {
+                  _esSerie = value;
+                  if (value) {
+                    _animationController.forward();
+                  } else {
+                    _animationController.reverse();
+                  }
+                });
+              },
+            ),
+            SizeTransition(
+              sizeFactor: _animation,
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    value: _tipoSerie,
+                    decoration:
+                        const InputDecoration(labelText: 'Tipo de Serie'),
+                    items: ['anticipada', 'vencida']
+                        .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                        .toList(),
+                    onChanged: (v) => setState(() => _tipoSerie = v!),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _hastaPeriodoCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Hasta Período',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
