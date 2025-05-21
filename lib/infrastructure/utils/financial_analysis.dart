@@ -23,6 +23,22 @@ class FinancialAnalysis {
       throw StateError('Condición no soportada para análisis-n');
     }
 
+    // Validar que haya al menos un flujo con valor conocido
+    final hasKnownFlows = d.movimientos.any((m) => m.valor != null) ||
+        d.valores.any((v) => v.valor != null);
+    if (!hasKnownFlows) {
+      throw StateError('Se necesita al menos un flujo con valor conocido');
+    }
+
+    // Validar que el flujo desconocido tenga un valor objetivo
+    final unknownMov = d.movimientos.firstWhereOrNull((m) => m.periodo == null);
+    final unknownVal = d.valores.firstWhereOrNull((v) => v.periodo == null);
+
+    if (unknownMov?.valor == null && unknownVal?.valor == null) {
+      throw StateError(
+          'El flujo con periodo desconocido debe tener un valor objetivo');
+    }
+
     /* ───── Normalizar tasas a periódica-vencida ───────────────── */
     final List<TasaDeInteres> tasasOk = d.tasasDeInteres.map((t) {
       final yaOk = t.periodicidad.id == d.unidadDeTiempo.id &&
@@ -119,6 +135,17 @@ class FinancialAnalysis {
     final tipoFlujo = movNull?.tipo ?? valNull!.flujo;
     final ingresoObjetivo =
         RateConversionUtils.normalizeTipo(tipoFlujo) == 'ingreso';
+
+    // Validar que la relación entre el flujo y el PV sea válida
+    if (sumatoriaPV == 0) {
+      throw StateError('El valor presente total no puede ser cero');
+    }
+
+    final flujoPV = flujoValor * (ingresoObjetivo ? 1 : -1);
+    if (sumatoriaPV * flujoPV >= 0) {
+      throw StateError(
+          'La relación entre el flujo y el valor presente debe ser negativa para poder calcular n');
+    }
 
     steps.add('🔎 Flujo objetivo (sin periodo): '
         '${ingresoObjetivo ? "Ingreso" : "Egreso"} \$${flujoValor.toStringAsFixed(2)}');

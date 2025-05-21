@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:convert';
 
 import 'package:inge_app/domain/entities/diagrama_de_flujo.dart';
 import 'package:inge_app/domain/entities/equation_analysis.dart';
@@ -13,6 +14,8 @@ class FinancialAnalysisSeries {
   static EquationAnalysis analyze(DiagramaDeFlujo d) {
     print('=== INICIO ANÁLISIS FINANCIERO ===');
     print('Diagrama recibido: ${d.toString()}');
+    print('Diagrama en JSON:');
+    print(const JsonEncoder.withIndent('  ').convert(d.toMap()));
 
     final steps = <String>[];
     final int focal = d.periodoFocal ?? 0;

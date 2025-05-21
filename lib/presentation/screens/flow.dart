@@ -11,6 +11,7 @@ import 'package:inge_app/application/blocs/valor/valor_bloc.dart';
 import 'package:inge_app/application/blocs/valor/valor_state.dart';
 import 'package:inge_app/application/blocs/movimiento/movimiento_bloc.dart';
 import 'package:inge_app/application/blocs/movimiento/movimiento_state.dart';
+import 'package:inge_app/domain/entities/equation_analysis.dart';
 import 'package:inge_app/presentation/widgets/description_section.dart';
 import 'package:inge_app/presentation/widgets/equation_section.dart';
 import 'package:inge_app/presentation/widgets/focal_period_section.dart';
@@ -21,7 +22,145 @@ import 'package:inge_app/presentation/widgets/values_section.dart';
 import 'package:inge_app/presentation/widgets/movements_section.dart';
 import 'package:inge_app/presentation/widgets/flow_diagram_widget.dart';
 
-class FlowScreen extends StatelessWidget {
+class FlowScreen extends StatefulWidget {
+  @override
+  _FlowScreenState createState() => _FlowScreenState();
+}
+
+class _FlowScreenState extends State<FlowScreen> {
+  final List<EquationAnalysis> _historial = [];
+
+  void _agregarAlHistorial(EquationAnalysis analisis) {
+    setState(() {
+      _historial.insert(0, analisis);
+      if (_historial.length > 10) {
+        _historial.removeLast();
+      }
+    });
+  }
+
+  void _mostrarHistorial() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Historial de Análisis',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: _historial.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No hay análisis en el historial',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: scrollController,
+                      itemCount: _historial.length,
+                      itemBuilder: (context, index) {
+                        final analisis = _historial[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              'Ecuación: ${analisis.equation}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Solución: ${analisis.solution}'),
+                                Text(
+                                  'Pasos: ${analisis.steps.length}',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                            trailing: Icon(Icons.history),
+                            onTap: () {
+                              // Aquí podrías mostrar más detalles del análisis
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Detalles del Análisis'),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('Ecuación: ${analisis.equation}'),
+                                        SizedBox(height: 8),
+                                        Text('Solución: ${analisis.solution}'),
+                                        SizedBox(height: 16),
+                                        Text('Pasos:',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        ...analisis.steps.map((step) => Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 16),
+                                              child: Text('• $step'),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text('Cerrar'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final flowBloc = context.read<FlowDiagramBloc>();
@@ -60,7 +199,16 @@ class FlowScreen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        appBar: AppBar(title: Text('Diagrama de Flujo Económico')),
+        appBar: AppBar(
+          title: Text('Diagrama de Flujo Económico'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.history),
+              onPressed: _mostrarHistorial,
+              tooltip: 'Ver historial',
+            ),
+          ],
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(16),
           child: Column(
@@ -156,7 +304,14 @@ class FlowScreen extends StatelessWidget {
               ),
 
               // 6) Botón de análisis
-              const AnalysisSection(),
+              BlocListener<FlowDiagramBloc, FlowDiagramState>(
+                listener: (context, state) {
+                  if (state is AnalysisSuccess) {
+                    _agregarAlHistorial(state.analysis);
+                  }
+                },
+                child: const AnalysisSection(),
+              ),
             ],
           ),
         ),

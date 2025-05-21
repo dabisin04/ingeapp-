@@ -34,6 +34,298 @@ class FinancialAnalyzer {
     print('══════════════════════════');
   }
 
+  /* ───────── FORMATOS JSON ESPERADOS ───────── */
+  static Map<String, String> getJsonFormats() {
+    return {
+      'SERIE-SALDO': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "P",
+      "flujo": "egreso",
+      "periodo": 0,
+      "valor": "P",
+      "esSerie": false
+    },
+    {
+      "tipo": "A",
+      "flujo": "ingreso",
+      "periodo": 1,
+      "hastaPeriodo": 12,
+      "valor": 100,
+      "esSerie": true,
+      "tipoSerie": "vencida"
+    },
+    {
+      "tipo": "F",
+      "flujo": "ingreso",
+      "periodo": 6,
+      "valor": 500,
+      "esSerie": false
+    }
+  ],
+  "movimientos": []
+}''',
+      'SERIES': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "A",
+      "flujo": "ingreso",
+      "periodo": 1,
+      "hastaPeriodo": 12,
+      "valor": 100,
+      "esSerie": true,
+      "tipoSerie": "vencida"
+    }
+  ],
+  "movimientos": []
+}''',
+      'X-MULTI': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "X",
+      "flujo": "ingreso",
+      "periodo": 0,
+      "valor": "X",
+      "esSerie": false
+    },
+    {
+      "tipo": "Y",
+      "flujo": "egreso",
+      "periodo": 6,
+      "valor": "2X",
+      "esSerie": false
+    }
+  ],
+  "movimientos": []
+}''',
+      'X-SINGLE': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "X",
+      "flujo": "ingreso",
+      "periodo": 0,
+      "valor": "X",
+      "esSerie": false
+    }
+  ],
+  "movimientos": [
+    {
+      "tipo": "egreso",
+      "periodo": 6,
+      "valor": 500,
+      "esSerie": false
+    }
+  ]
+}''',
+      'UNKNOWN-N': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "F",
+      "flujo": "ingreso",
+      "periodo": null,
+      "valor": 1000,
+      "esSerie": false
+    }
+  ],
+  "movimientos": [
+    {
+      "tipo": "egreso",
+      "periodo": 0,
+      "valor": 500,
+      "esSerie": false
+    }
+  ]
+}''',
+      'PVFV': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [
+    {
+      "tipo": "P",
+      "flujo": "egreso",
+      "periodo": 0,
+      "valor": null,
+      "esSerie": false
+    }
+  ],
+  "movimientos": [
+    {
+      "tipo": "ingreso",
+      "periodo": 12,
+      "valor": 1000,
+      "esSerie": false
+    }
+  ]
+}''',
+      'IRR-FOCAL': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 6,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [],
+  "movimientos": [
+    {
+      "tipo": "egreso",
+      "periodo": 0,
+      "valor": 1000,
+      "esSerie": false
+    },
+    {
+      "tipo": "ingreso",
+      "periodo": 6,
+      "valor": 500,
+      "esSerie": false
+    },
+    {
+      "tipo": "ingreso",
+      "periodo": 12,
+      "valor": 600,
+      "esSerie": false
+    }
+  ]
+}''',
+      'IRR-SIMPLE': '''
+{
+  "unidadDeTiempo": {"id": "mes", "nombre": "Mensual"},
+  "cantidadDePeriodos": 12,
+  "periodoFocal": 0,
+  "tasasDeInteres": [
+    {
+      "id": "t1",
+      "valor": 0.01,
+      "periodicidad": {"id": "mes", "nombre": "Mensual"},
+      "capitalizacion": {"id": "mes", "nombre": "Mensual"},
+      "tipo": "Vencida",
+      "periodoInicio": 0,
+      "periodoFin": 12,
+      "aplicaA": "todos"
+    }
+  ],
+  "valores": [],
+  "movimientos": [
+    {
+      "tipo": "egreso",
+      "periodo": 0,
+      "valor": 1000,
+      "esSerie": false
+    },
+    {
+      "tipo": "ingreso",
+      "periodo": 12,
+      "valor": 1200,
+      "esSerie": false
+    }
+  ]
+}'''
+    };
+  }
+
   static int _countX(DiagramaDeFlujo d) {
     int c = 0;
     for (final dynamic v in [...d.valores, ...d.movimientos]) {
