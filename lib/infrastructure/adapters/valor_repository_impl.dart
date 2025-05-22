@@ -21,23 +21,21 @@ class ValorAdapter implements ValorRepository {
   @override
   Future<void> updateValor(Valor valor) async {
     print(
-      '🔄 [ValorAdapter] upsertValor: periodo=${valor.periodo}, '
+      '🔄 [ValorAdapter] updateValor: periodo=${valor.periodo}, '
       'tipo=${valor.tipo}, flujo=${valor.flujo}, valor=${valor.valor}',
     );
 
+    // Primero intentamos encontrar el valor por su periodo y tipo
     final index = _valores.indexWhere(
-      (v) =>
-          v.periodo == valor.periodo &&
-          v.tipo == valor.tipo &&
-          v.flujo == valor.flujo,
+      (v) => v.periodo == valor.periodo && v.tipo == valor.tipo,
     );
 
     if (index != -1) {
-      // Si existe, actualiza
+      // Si encontramos un valor con el mismo periodo y tipo, lo actualizamos
       _valores[index] = valor;
       print('   ↪️ Registro existente actualizado.');
     } else {
-      // Si no existe, lo agrega
+      // Si no encontramos un valor con el mismo periodo y tipo, lo agregamos como nuevo
       _valores.add(valor);
       print('   ➕ Registro no encontrado, insertado como nuevo.');
     }

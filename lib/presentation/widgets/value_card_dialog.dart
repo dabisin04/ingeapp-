@@ -115,22 +115,27 @@ class _ValueCardDialogState extends State<ValueCardDialog>
   @override
   Widget build(BuildContext context) {
     final state = context.watch<ValorBloc>().state;
-    List<String> tiposDisponibles = ['Presente', 'Futuro'];
-    if (state is ValorLoaded) {
+    List<String> tiposDisponibles = [
+      'Presente',
+      'Futuro',
+      'Anualidad',
+      'Gradiente'
+    ];
+
+    if (widget.valor != null) {
+      _tipo = widget.valor!.tipo;
+      tiposDisponibles = [_tipo!];
+    } else if (state is ValorLoaded) {
       final usados = state.valores.map((v) => v.tipo).toSet();
       tiposDisponibles =
           tiposDisponibles.where((t) => !usados.contains(t)).toList();
-      if (widget.valor != null &&
-          !tiposDisponibles.contains(widget.valor!.tipo)) {
-        tiposDisponibles.insert(0, widget.valor!.tipo);
-      }
     }
 
     if (tiposDisponibles.isEmpty) {
       return AlertDialog(
         title: const Text('No hay tipos disponibles'),
         content: const Text(
-          'Ya existe un valor Presente y un valor Futuro.\n'
+          'Ya existen todos los tipos de valores posibles.\n'
           'Borra uno antes de añadir otro.',
         ),
         actions: [

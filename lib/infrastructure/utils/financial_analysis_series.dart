@@ -103,8 +103,34 @@ class FinancialAnalysisSeries {
       }
       if (monto is String && variablePat.hasMatch(monto)) {
         final exp = monto.replaceAll(' ', '').toUpperCase();
-        // ... lógica de fracción, potencia, lineal y pelada ...
-        // (idéntica a tu implementación actual)
+        if (exp.contains('/')) {
+          // Fracción
+          final parts = exp.split('/');
+          final num = parts[0];
+          final den = parts[1];
+          final contrib = factor * (ingreso ? 1 : -1);
+          totalCoef += contrib;
+          print('  Contribución fracción: $contrib X');
+          ecuacionSb.write(
+              '${contrib >= 0 ? '+' : '-'}${contrib.abs().toStringAsFixed(6)}X ');
+        } else if (exp.contains('^')) {
+          // Potencia
+          final parts = exp.split('^');
+          final base = parts[0];
+          final potencia = int.parse(parts[1]);
+          final contrib = factor * (ingreso ? 1 : -1);
+          totalCoef += contrib;
+          print('  Contribución potencia: $contrib X');
+          ecuacionSb.write(
+              '${contrib >= 0 ? '+' : '-'}${contrib.abs().toStringAsFixed(6)}X ');
+        } else {
+          // Variable simple (P, A, X, F, V)
+          final contrib = factor * (ingreso ? 1 : -1);
+          totalCoef += contrib;
+          print('  Contribución variable simple: $contrib X');
+          ecuacionSb.write(
+              '${contrib >= 0 ? '+' : '-'}${contrib.abs().toStringAsFixed(6)}X ');
+        }
       } else {
         try {
           final num valNum =
